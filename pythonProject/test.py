@@ -36,8 +36,8 @@ def ex_tag(sid, page):
 def re_tag(sid):
     ### 특정 분야의 100페이지까지의 뉴스의 링크를 수집하여 중복 제거한 리스트로 변환하는 함수 ###
     re_lst = []
-    # for i in tqdm(range(100)):
-    for i in tqdm(range(10)):
+    for i in tqdm(range(100)):
+    # for i in tqdm(range(10)):
         lst = ex_tag(sid, i + 1)
         re_lst.extend(lst)
 
@@ -49,7 +49,7 @@ def re_tag(sid):
 
 all_hrefs = {}
 # sids = [i for i in range(100,106)]  # 분야 리스트
-sids = [i for i in range(101,102)]
+sids = [i for i in range(100,101)]
 
 # 각 분야별로 링크 수집해서 딕셔너리에 저장
 for sid in sids:
@@ -122,7 +122,7 @@ def art_crawl(all_hrefs, sid, index):
 
 # 모든 섹션의 데이터 수집 (제목, 날짜, 본문, section, url)
 # section_lst = [s for s in range(100, 106)]
-section_lst = [s for s in range(101, 102)]
+section_lst = [s for s in range(100, 101)]
 artdic_lst = []
 
 for section in tqdm(section_lst):
@@ -142,20 +142,20 @@ json_data = json.dumps(artdic_lst, ensure_ascii=False, indent=4)
 # 현재 날짜를 얻어 파일 이름 생성
 today_date = datetime.now().strftime('%Y-%m-%d')
 sid = 101
-txt_file_path = f"article_data_{today_date}_{sid}.json"
+txt_file_path = f"article_data_100p_{today_date}_{sid}.json"
 
 # JSON 데이터를 txt 파일로 저장
 with open(txt_file_path, 'w', encoding='utf-8') as json_file:
     json_file.write(json_data)
 
-# JSON 파일 열기
-try:
-    with open(txt_file_path, 'r', encoding='utf-8') as json_file:
-        json_data = json.load(json_file)
-    print("JSON 파일 내용:")
-    print(json_data)
-except FileNotFoundError:
-    print(f"파일 '{txt_file_path}'을 찾을 수 없습니다.")
+# # JSON 파일 열기
+# try:
+#     with open(txt_file_path, 'r', encoding='utf-8') as json_file:
+#         json_data = json.load(json_file)
+#     print("JSON 파일 내용:")
+#     print(json_data)
+# except FileNotFoundError:
+#     print(f"파일 '{txt_file_path}'을 찾을 수 없습니다.")
 
 
 
