@@ -7,7 +7,8 @@ from datetime import datetime
 # 파일 불러오기
 today_date = datetime.now().strftime('%Y-%m-%d')
 
-with open(f"article_data_{today_date}_101.json", 'r', encoding='utf-8') as file:
+with open(f"article_data_{today_date}_100.json", 'r', encoding='utf-8') as file:
+# with open(f"article_data_100p_100.json", 'r', encoding='utf-8') as file:
   art_df = json.load(file)
 
 # Okt 초기화
@@ -22,8 +23,9 @@ for data in tqdm(art_df):
   main_text = data.get("main", "")
 
   # 텍스트 데이터를 Okt를 사용하여 처리
-  title_tokens = okt.morphs(title_text)
-  main_tokens = okt.morphs(main_text)
+  title_tokens = okt.morphs(title_text, stem = True)
+  main_tokens = okt.morphs(main_text, stem = True)
+
   # title_tokens = okt.pos(title_text)
   # main_tokens = okt.pos(main_text)
 
@@ -34,9 +36,10 @@ for data in tqdm(art_df):
   })
 
 # 새로운 JSON 파일로 저장
-with open(f"processed_data_{today_date}_101.json", 'w', encoding='utf-8') as output_file:
+with open(f"processed_data_{today_date}_100.json", 'w', encoding='utf-8') as output_file:
+# with open(f"processed_data_100p_100.json", 'w', encoding='utf-8') as output_file:
   json.dump(processed_data, output_file, ensure_ascii=False, indent=4)
 
-with open(f"processed_data_{today_date}_101.json", 'r', encoding='utf-8') as file:
-    data = json.load(file)
-    print(data)
+# with open(f"processed_data_{today_date}_101.json", 'r', encoding='utf-8') as file:
+#     data = json.load(file)
+#     print(data)
