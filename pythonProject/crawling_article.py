@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from tqdm import tqdm
 import json
-import subprocess
-import hdfs
+# import subprocess
+# import hdfs
 
 sids = [i for i in range(100, 106)]
 for sid in sids:
@@ -50,18 +50,9 @@ for sid in sids:
 
 
   def art_crawl(all_hrefs, sid, index):
-    """
-    sid와 링크 인덱스를 넣으면 기사제목, 날짜, 본문을 크롤링하여 딕셔너리를 출력하는 함수
 
-    Args:
-        all_hrefs(dict): 각 분야별로 100페이지까지 링크를 수집한 딕셔너리 (key: 분야(sid), value: 링크)
-        sid(int): 분야 [100: 정치, 101: 경제, 102: 사회, 103: 생활/문화, 104: 세계, 105: IT/과학]
-        index(int): 링크의 인덱스
+    # sid(int): 분야[100: 정치, 101: 경제, 102: 사회, 103: 생활 / 문화, 104: 세계, 105: IT / 과학]
 
-    Returns:
-        dict: 기사제목, 날짜, 본문이 크롤링된 딕셔너리
-
-    """
     art_dic = {}
 
     title_selector = "#title_area > span"
@@ -117,8 +108,8 @@ for sid in sids:
         art_dic["url"] = all_hrefs[section][i]
         artdic_lst.append(art_dic)
 
-  # HDFS 클라이언트 생성
-  client = hdfs.InsecureClient('http://localhost:9000', user='dev')
+  # # HDFS 클라이언트 생성
+  # client = hdfs.InsecureClient('http://localhost:9000', user='dev')
 
   # # HDFS 루트 경로 확인
   # root_path = client.status('/').get('pathSuffix')
@@ -126,13 +117,23 @@ for sid in sids:
   # 현재 날짜를 얻어 파일 이름 생성
   today_date = datetime.now().strftime('%Y-%m-%d')
 
-  # JSON 데이터를 HDFS에 직접 저장
-  # hdfs_path = f'/{root_path}/article_data_{today_date}_{sid}.json'
-  hdfs_path = f'/article/article_data_{today_date}_{sid}.json'
-  json_data = json.dumps(artdic_lst, ensure_ascii=False, indent=4)
-  with client.write(hdfs_path, encoding='utf-8') as writer:
-    writer.write(json_data)
+  # # JSON 데이터를 HDFS에 직접 저장
+  # # hdfs_path = f'/{root_path}/article_data_{today_date}_{sid}.json'
+  # hdfs_path = f'/article/article_data_{today_date}_{sid}.json'
+  # json_data = json.dumps(artdic_lst, ensure_ascii=False, indent=4)
+  # with client.write(hdfs_path, encoding='utf-8') as writer:
+  #   writer.write(json_data)
 
-# 다른 Python 스크립트 실행
-next_script_path = "/preprocessing_article.py"
-subprocess.call(["python", next_script_path])
+  # 데이터프레임을 JSON 형식으로 변환
+  json_data = json.dumps(artdic_lst, ensure_ascii=False, indent=4)
+
+  # 현재 날짜를 얻어 파일 이름 생성
+  txt_file_path = f"article_data_100p_{today_date}_{sid}.json"
+
+  # JSON 데이터를 txt 파일로 저장
+  with open(txt_file_path, 'w', encoding='utf-8') as json_file:
+    json_file.write(json_data)
+
+# # 다른 Python 스크립트 실행
+# next_script_path = "preprocessing_article.py"
+# subprocess.call(["python", next_script_path])
